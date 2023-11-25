@@ -5,7 +5,7 @@ import os  # For interacting with the file system
 from datetime import timedelta  # For representing time intervals
 import srt  # Library for handling SRT subtitle files
 import subprocess  # For executing shell commands
-
+from utils import cut_video
 # Function to generate an SRT content from the transcription segments
 def generate_srt(segments):
     subtitles = []
@@ -81,12 +81,19 @@ def embed_subtitles(video_path, srt_path, output_video_path, additional_audio_pa
     subprocess.run(command, check=True)
     
 # Function to generate subtitles and embed them into the video
-def generate_subtitles(video_path, audio_path=None, srt_path=None, volume_factor=0.5):
+def generate_subtitles(video_path, audio_path=None, srt_path=None, volume_factor=0.5,start_time=0,end_time=None):
     # Check if the video file exists
     if not os.path.exists(video_path):
         print(f"Error: The video file {video_path} does not exist.")
         return
     
+    # Cut the video if condition match
+    
+    if start_time != 0 or end_time is not None:
+        prev_video_path = video_path
+        video_path = 'cut_'+video_path
+        cut_video(prev_video_path,start_time,end_time,video_path)
+        
     # Use existing audio file if it's provided and exists
     if audio_path and os.path.exists(audio_path):
         print(f"Using existing audio file: {audio_path}")
