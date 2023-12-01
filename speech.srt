@@ -1,20 +1,8 @@
 1
-00:00:00,000 --> 00:00:03,600
- Then the quiet shadow of hardship hope as a whisper, urging us to endure.
+00:00:00,000 --> 00:00:03,200
+ My mama always said life was like a box of chocolates.
 
 2
-00:00:03,600 --> 00:00:06,760
- With each step through darkness, we move toward a dawn yet unseen.
-
-3
-00:00:06,760 --> 00:00:10,800
- Hold fast to dreams, foreign dreams, lies the strength to wake to brighter days.
-
-4
-00:00:10,800 --> 00:00:14,080
- Remember, after the longest night comes the warmth of the sunrise.
-
-5
-00:00:14,080 --> 00:00:17,960
- You are not alone, every sunrise is a promise, and new day to rediscover joy.
+00:00:03,200 --> 00:00:05,200
+ You never know what you're gonna get.
 

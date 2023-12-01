@@ -31,3 +31,46 @@ def convert_to_seconds(time_str):
         print(h,m,s)
         return int(h) * 3600 + int(m) * 60 + int(s)
     return time_str
+
+def loop_video_to_audio_length(video_path, audio_path, output_video_path):
+    # Load the audio to get its duration
+    audio_clip = mp.AudioFileClip(audio_path)
+    audio_duration = audio_clip.duration
+    
+    # Load the video to get its duration
+    video_clip = mp.VideoFileClip(video_path)
+    video_duration = video_clip.duration
+    
+    # Calculate how many times to loop the video
+    loop_count = int(audio_duration // video_duration) + 1
+    
+    # Create a list of the video clip repeated
+    final_clip = mp.concatenate_videoclips([video_clip] * loop_count)
+    
+    # Set the final video's audio to be the audio clip
+    final_clip = final_clip.set_audio(audio_clip)
+    
+    # Write the result to the output file path
+    final_clip.write_videofile(output_video_path, codec='libx264', audio_codec='aac')
+    
+    # Close the clips to release resources
+    audio_clip.close()
+    video_clip.close()
+    final_clip.close()
+    
+def check_audio_video_length(video_path, audio_path):
+    # Load the video and get its duration
+    video_clip = mp.VideoFileClip(video_path)
+    video_duration = video_clip.duration
+    video_clip.close()  # Close the video clip to release resources
+
+    # Load the audio and get its duration
+    audio_clip = mp.AudioFileClip(audio_path)
+    audio_duration = audio_clip.duration
+    audio_clip.close()  # Close the audio clip to release resources
+
+    # Compare the durations
+    if audio_duration > video_duration:
+        return True  # Audio is longer than the video
+    else:
+        return False  # Audio is not longer than the video

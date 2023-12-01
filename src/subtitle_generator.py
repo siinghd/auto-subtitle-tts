@@ -5,7 +5,7 @@ import os  # For interacting with the file system
 from datetime import timedelta  # For representing time intervals
 import srt  # Library for handling SRT subtitle files
 import subprocess  # For executing shell commands
-from utils import cut_video
+from utils import cut_video, check_audio_video_length, loop_video_to_audio_length
 # Function to generate an SRT content from the transcription segments
 def generate_srt(segments):
     subtitles = []
@@ -88,8 +88,7 @@ def generate_subtitles(video_path, audio_path=None, srt_path=None, volume_factor
         return
     
     # Cut the video if condition match
-    
-    if start_time != 0 or end_time is not None:
+    if (start_time != 0 and start_time is not None) or end_time is not None:
         prev_video_path = video_path
         video_path = 'cut_'+video_path
         cut_video(prev_video_path,start_time,end_time,video_path)
@@ -102,6 +101,12 @@ def generate_subtitles(video_path, audio_path=None, srt_path=None, volume_factor
         print("Extracting audio from video...")
         audio_path = extract_audio(video_path)
     
+    isAudioLonger = check_audio_video_length(video_path,audio_path)
+    
+    if isAudioLonger:
+        output_video_path_looped = 'looped_'+ os.path.basename(video_path)
+        loop_video_to_audio_length(video_path,audio_path,output_video_path_looped)
+
     # Use existing SRT file if it's provided and exists
     if srt_path and os.path.exists(srt_path):
         print(f"Using existing subtitles file: {srt_path}")
@@ -121,7 +126,7 @@ def generate_subtitles(video_path, audio_path=None, srt_path=None, volume_factor
     # Embed subtitles into the video if the output video doesn't already exist
     if not os.path.exists(output_video_path):
         print("Embedding subtitles into video...")
-        embed_subtitles(video_path, srt_path, output_video_path, audio_path, volume_factor=volume_factor)
+        embed_subtitles(output_video_path_looped if isAudioLonger else video_path, srt_path, output_video_path, audio_path, volume_factor=volume_factor)
         print(f"Video with subtitles saved to {output_video_path}")
     else:
         # Notify the user if the output video file already exists
